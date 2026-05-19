@@ -3,27 +3,38 @@
 {% block title %}Search Results{% endblock %}
 
 {% block content %}
-<br>
-    <h1>Search results for "<span class="text-primary">{{ search_query }}</span>"</h1>
 
+<div class="container mt-4">
     {% if search_query %}
-        {% if results %}
-            <p class="text-muted">Found {{ results|length }} matching entr{{ results|length|pluralize:"y,ies"}}:</p>
-            <ul>
-                {% for result in results %}
-                    <li>
-                        <a href="{% url 'get_entry' title=result %}">
-                        {{ result }}
+
+    <h1 class="border-bottom pb-2 mb-4">
+        Search results for "<span class="text-primary">{{ search_query }}</span>"
+    </h1>
+            {% if results %}
+                <p class="text-muted mb-4">Found {{ results|length }} matching entr{{ results|length|pluralize:"y,ies"}}:</p>
+                <div class="list-group">
+                    {% for result in results %}
+                        <a class="list-group-item list-group-item-action" href="{% url 'get_entry' title=result %}">
+                            <h5 class="mb-1 text-primary">
+                                {{ result }}
+                            </h5>
+
+                            <small class="text-muted">
+                                encyclopedia entry available for "{{ result }}"
+                            </small>
                         </a>
-                    </li>
-                {% endfor %}
-            </ul>
+                    
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-danger mt-3">
+                    No entries found matching "<strong>{{ search_query }}</strong>".
+                </d>
+            {% endif %}
         {% else %}
-            <p class="text-danger mt-3">
-                No entries found matching "<strong>{{ search_query }}</strong>".
-            </p>
+            <div class="alert alert-warning">{{ error }}</div>
         {% endif %}
-    {% else %}
-        <p class="text-warning">Please enter a search query.</p>
-    {% endif %}
+
+</div>
+
 {% endblock %}

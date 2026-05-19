@@ -45,7 +45,16 @@ def get_entry(request, title):
     })
 
 def search_entry(request):
-    search_query = request.GET.get('q', '').lower()
+    search_query = request.GET.get('q', '').lower().strip()
+
+    if not search_query or not any(char.isalnum() for char in search_query):
+        return render(request, "encyclopedia/search.html", {
+            "results": [],
+            "search_query": "",
+            "error": "Please enter a valid search term."
+        })
+    
+    
     all_entries = util.list_entries()
 
     for entry in all_entries:
